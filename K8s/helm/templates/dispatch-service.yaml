@@ -9,8 +9,8 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - name: headless
-    port: 55555
-    targetPort: 0
+    - name: headless
+      port: 55555
+      targetPort: 0
   selector:
     service: dispatch

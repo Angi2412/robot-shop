@@ -11,6 +11,8 @@ spec:
       service: ratings
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         service: ratings
     spec:
@@ -18,24 +20,24 @@ spec:
       serviceAccountName: robot-shop
       {{ end }}
       containers:
-      - name: ratings
-        image: {{ .Values.image.repo }}/rs-ratings:{{ .Values.image.version }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-        - containerPort: 80
-        resources:
-          limits:
-            cpu: 200m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 50Mi
-        readinessProbe:
-          httpGet:
-            path: /_health
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          failureThreshold: 30
-          successThreshold: 1
+        - name: ratings
+          image: {{ .Values.image.repo }}/rs-ratings:{{ .Values.image.version }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 200m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 50Mi
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 30
+            successThreshold: 1
       restartPolicy: Always

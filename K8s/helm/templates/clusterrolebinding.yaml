@@ -8,7 +8,7 @@ roleRef:
   kind: ClusterRole
   name: robot-shop
 subjects:
-- kind: ServiceAccount
-  name: robot-shop
-  namespace: robot-shop
-{{ end }}
+  - kind: ServiceAccount
+    name: robot-shop
+    namespace: robot-shop
+  {{ end }}

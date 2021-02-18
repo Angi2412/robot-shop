@@ -5,6 +5,7 @@ from locust import HttpUser, task, between
 from random import choice
 from random import randint
 
+
 class UserBehavior(HttpUser):
     wait_time = between(2, 10)
 
@@ -35,12 +36,11 @@ class UserBehavior(HttpUser):
         fake_ip = random.choice(self.fake_ip_addresses)
 
         credentials = {
-                'name': 'user',
-                'password': 'password'
-                }
+            'name': 'user',
+            'password': 'password'
+        }
         res = self.client.post('/api/user/login', json=credentials, headers={'x-forwarded-for': fake_ip})
         print('login {}'.format(res.status_code))
-
 
     @task
     def load(self):
@@ -63,7 +63,8 @@ class UserBehavior(HttpUser):
 
             # vote for item
             if randint(1, 10) <= 3:
-                self.client.put('/api/ratings/api/rate/{}/{}'.format(item['sku'], randint(1, 5)), headers={'x-forwarded-for': fake_ip})
+                self.client.put('/api/ratings/api/rate/{}/{}'.format(item['sku'], randint(1, 5)),
+                                headers={'x-forwarded-for': fake_ip})
 
             self.client.get('/api/catalogue/product/{}'.format(item['sku']), headers={'x-forwarded-for': fake_ip})
             self.client.get('/api/ratings/api/fetch/{}'.format(item['sku']), headers={'x-forwarded-for': fake_ip})
@@ -75,16 +76,20 @@ class UserBehavior(HttpUser):
 
         # country codes
         code = choice(self.client.get('/api/shipping/codes', headers={'x-forwarded-for': fake_ip}).json())
-        city = choice(self.client.get('/api/shipping/cities/{}'.format(code['code']), headers={'x-forwarded-for': fake_ip}).json())
+        city = choice(self.client.get('/api/shipping/cities/{}'.format(code['code']),
+                                      headers={'x-forwarded-for': fake_ip}).json())
         print('code {} city {}'.format(code, city))
-        shipping = self.client.get('/api/shipping/calc/{}'.format(city['uuid']), headers={'x-forwarded-for': fake_ip}).json()
+        shipping = self.client.get('/api/shipping/calc/{}'.format(city['uuid']),
+                                   headers={'x-forwarded-for': fake_ip}).json()
         shipping['location'] = '{} {}'.format(code['name'], city['name'])
         print('Shipping {}'.format(shipping))
         # POST
-        cart = self.client.post('/api/shipping/confirm/{}'.format(uniqueid), json=shipping, headers={'x-forwarded-for': fake_ip}).json()
+        cart = self.client.post('/api/shipping/confirm/{}'.format(uniqueid), json=shipping,
+                                headers={'x-forwarded-for': fake_ip}).json()
         print('Final cart {}'.format(cart))
 
-        order = self.client.post('/api/payment/pay/{}'.format(uniqueid), json=cart, headers={'x-forwarded-for': fake_ip}).json()
+        order = self.client.post('/api/payment/pay/{}'.format(uniqueid), json=cart,
+                                 headers={'x-forwarded-for': fake_ip}).json()
         print('Order {}'.format(order))
 
     @task
@@ -93,5 +98,3 @@ class UserBehavior(HttpUser):
             print('Error request')
             cart = {'total': 0, 'tax': 0}
             self.client.post('/api/payment/pay/partner-57', json=cart, headers={'x-forwarded-for': fake_ip})
-
-

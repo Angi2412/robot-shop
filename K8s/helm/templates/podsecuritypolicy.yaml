@@ -15,12 +15,12 @@ spec:
   supplementalGroups:
     rule: RunAsAny
   allowedCapabilities:
-  - 'NET_ADMIN'
+    - 'NET_ADMIN'
   volumes:
-  - configMap
-  - downwardAPI
-  - emptyDir
-  - persistentVolumeClaim
-  - secret
-  - projected
-{{ end }}
+    - configMap
+    - downwardAPI
+    - emptyDir
+    - persistentVolumeClaim
+    - secret
+    - projected
+  {{ end }}

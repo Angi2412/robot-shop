@@ -6,8 +6,8 @@ metadata:
   name: mongodb
 spec:
   ports:
-  - name: mongo
-    port: 27017
-    targetPort: 27017
+    - name: mongo
+      port: 27017
+      targetPort: 27017
   selector:
     service: mongodb

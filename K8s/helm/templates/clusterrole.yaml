@@ -4,12 +4,12 @@ kind: ClusterRole
 metadata:
   name: robot-shop
 rules:
-- apiGroups:
-  - policy
-  resourceNames:
-  - robot-shop
-  resources:
-  - podsecuritypolicies
-  verbs:
-  - use
-{{ end }}
+  - apiGroups:
+      - policy
+    resourceNames:
+      - robot-shop
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+  {{ end }}

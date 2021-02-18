@@ -11,6 +11,8 @@ spec:
       service: mysql
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         service: mysql
     spec:
@@ -18,20 +20,20 @@ spec:
       serviceAccountName: robot-shop
       {{ end }}
       containers:
-      - name: mysql
-        image: {{ .Values.image.repo }}/rs-mysql-db:{{ .Values.image.version }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        # added for Istio
-        securityContext:
-          capabilities:
-            add: ["NET_ADMIN"]
-        ports:
-        - containerPort: 3306
-        resources:
-          limits:
-            cpu: 200m
-            memory: 1024Mi
-          requests:
-            cpu: 100m
-            memory: 700Mi
+        - name: mysql
+          image: {{ .Values.image.repo }}/rs-mysql-db:{{ .Values.image.version }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # added for Istio
+          securityContext:
+            capabilities:
+              add: [ "NET_ADMIN" ]
+          ports:
+            - containerPort: 3306
+          resources:
+            limits:
+              cpu: 200m
+              memory: 1024Mi
+            requests:
+              cpu: 100m
+              memory: 700Mi
       restartPolicy: Always
